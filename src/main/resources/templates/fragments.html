@@ -5,16 +5,16 @@
     <title th:text="${title}">My Cheeses</title>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}" />
     <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
 </head>
 <body>
 
 <nav th:fragment="navigation">
-    <a href="/cheese">List</a> |
-    <a href="/cheese/add">Add</a> |
-    <a href="/cheese/remove">Remove</a> |
-    <a href="/category">Category</a>
+    <a href="/cheese">Home</a> |
+    <a href="/category">Category</a> |
+    <a href="/menu">Menu</a>
 </nav>
 
 </body>

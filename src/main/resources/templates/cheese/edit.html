@@ -6,7 +6,8 @@
 
 <nav th:replace="fragments :: navigation"></nav>
 
-<form method="post" style="max-width:600px;" th:object="${cheese}">
+<form method="post" action="/cheese/edit" style="max-width:600px;" th:object="${cheese}">
+    <input type="hidden" th:field="*{id}" />
     <div class="form-group">
         <label th:for="name">Name</label>
         <input class="form-control" th:field="*{name}" />
@@ -17,19 +18,18 @@
         <input class="form-control" th:field="*{description}" />
         <span th:errors="*{description}" class="error"></span>
     </div>
-    <div th:if="${cheeseCategories} and ${cheeseCategories.size()}" class="form-group">
+
+    <div class="form-group">
         <label th:for="catagoryId">Catagory</label>
-        <select name="categoryId">
+        <select th:field="*{category}">
             <option th:each="cheeseCategory : ${cheeseCategories}"
                     th:text="${cheeseCategory.name}"
-                    th:value="${cheeseCategory.Id}"></option>
+                    th:value="${cheeseCategory.Id}">
+            </option>
         </select>
     </div>
-    <div th:unless="${cheeseCategories} and ${cheeseCategories.size()}">
-        <input type="hidden" name="categoryId" value="-1" />
-        <p>No Cheese Categories! <a href="/category/add">Add a category</a></p>
-    </div>
-    <input type="submit" value="Add Cheese" />
+
+    <input type="submit" value="Update Cheese" />
 </form>
 
 </body>

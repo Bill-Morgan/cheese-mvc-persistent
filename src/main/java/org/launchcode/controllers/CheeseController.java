@@ -53,9 +53,11 @@ public class CheeseController {
             model.addAttribute("title", "Add Cheese");
             return "cheese/add";
         }
-
-        Category cat = categoryDao.findOne(categoryId);
-        newCheese.setCategory(cat);
+        int noCat = -1;
+        if (!categoryId.equals(noCat)) {
+            Category cat = categoryDao.findOne(categoryId);
+            newCheese.setCategory(cat);
+        }
         cheeseDao.save(newCheese);
         return "redirect:";
     }
@@ -70,7 +72,7 @@ public class CheeseController {
     @RequestMapping(value = "remove", method = RequestMethod.POST)
     public String processRemoveCheeseForm(@RequestParam int[] cheeseIds) {
 
-        for (int cheeseId : cheeseIds) {
+        for (Integer cheeseId : cheeseIds) {
             cheeseDao.delete(cheeseId);
         }
 
@@ -90,4 +92,29 @@ public class CheeseController {
         return "cheese/index";
     }
 
+    @RequestMapping(value = "edit/{cheeseId}", method = RequestMethod.GET)
+    public String displayEditCheeseForm(Model model, @PathVariable int cheeseId){
+
+        model.addAttribute("title", "Edit Cheese: " + cheeseDao.findOne(cheeseId).getName());
+        model.addAttribute("cheese", cheeseDao.findOne(cheeseId));
+        model.addAttribute("cheeseCategories", categoryDao.findAll());
+        return "cheese/edit";
+    }
+
+    @RequestMapping(value = "edit", method = RequestMethod.POST)
+    public String processEditCheeseForm(@ModelAttribute  @Valid Cheese theCheese,
+                                        Errors errors,
+                                        @RequestParam int id,
+                                        Model model){
+        if (errors.hasErrors()) {
+            model.addAttribute("cheese", theCheese);
+            model.addAttribute("title", "Edit Cheese: " + theCheese.getName());
+        }
+        Cheese cheese = cheeseDao.findOne(id);
+        cheese.setCategory(theCheese.getCategory());
+        cheese.setDescription(theCheese.getDescription());
+        cheese.setName(theCheese.getName());
+        cheeseDao.save(cheese);
+        return "redirect:";
+    }
 }
