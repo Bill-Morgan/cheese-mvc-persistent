@@ -37,10 +37,6 @@ public class Cheese {
     public Cheese() {
     }
 
-    public void removeFromAllMenus(){
-        this.menus.removeAll(this.menus);
-    }
-
     public int getId() {
         return id;
     }

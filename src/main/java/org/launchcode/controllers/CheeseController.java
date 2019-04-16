@@ -1,9 +1,13 @@
 package org.launchcode.controllers;
 
+import org.apache.catalina.LifecycleState;
+import org.hibernate.type.TrueFalseType;
 import org.launchcode.models.Category;
 import org.launchcode.models.Cheese;
+import org.launchcode.models.Menu;
 import org.launchcode.models.data.CategoryDao;
 import org.launchcode.models.data.CheeseDao;
+import org.launchcode.models.data.MenuDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,6 +15,10 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Null;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by LaunchCode
@@ -25,6 +33,9 @@ public class CheeseController {
     @Autowired
     private CategoryDao categoryDao;
 
+    @Autowired
+    private MenuDao menuDao;
+
     // Request path: /cheese
     @RequestMapping(value = "")
     public String index(Model model) {
@@ -37,10 +48,19 @@ public class CheeseController {
 
     @RequestMapping(value = "add", method = RequestMethod.GET)
     public String displayAddCheeseForm(Model model) {
-        model.addAttribute("title", "Add Cheese");
-        model.addAttribute(new Cheese());
-        model.addAttribute("cheeseCategories", categoryDao.findAll());
-        return "cheese/add";
+
+       Iterable<Category> categories = categoryDao.findAll();
+
+       for (Category cat : categories) { //test for empty list.  if list not empty add cheese
+           model.addAttribute("title", "Add Cheese");
+           model.addAttribute(new Cheese());
+           model.addAttribute("cheeseCategories", categories);
+           return "cheese/add";
+       }
+       model.addAttribute("title", "Please add a Category before adding Cheeses");
+       model.addAttribute("category", new Category());
+       return "category/add";
+
     }
 
     @RequestMapping(value = "add", method = RequestMethod.POST)
@@ -105,16 +125,25 @@ public class CheeseController {
     public String processEditCheeseForm(@ModelAttribute  @Valid Cheese theCheese,
                                         Errors errors,
                                         @RequestParam int id,
+                                        @RequestParam int categoryId,
                                         Model model){
         if (errors.hasErrors()) {
             model.addAttribute("cheese", theCheese);
             model.addAttribute("title", "Edit Cheese: " + theCheese.getName());
         }
         Cheese cheese = cheeseDao.findOne(id);
-        cheese.setCategory(theCheese.getCategory());
+        cheese.setCategory(categoryDao.findOne(categoryId));
         cheese.setDescription(theCheese.getDescription());
         cheese.setName(theCheese.getName());
         cheeseDao.save(cheese);
         return "redirect:";
+    }
+
+    private Boolean isEmptyList(List theList) {
+        for (Object cat : theList) {
+            return Boolean.FALSE;
+        }
+        return Boolean.TRUE;
+
     }
 }
