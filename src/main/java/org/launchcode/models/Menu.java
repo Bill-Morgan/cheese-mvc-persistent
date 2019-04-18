@@ -16,7 +16,7 @@ public class Menu {
     @Size(min = 3, max = 15)
     private String name;
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "menus")
     private List<Cheese> cheeses;
 
     public Menu() {
