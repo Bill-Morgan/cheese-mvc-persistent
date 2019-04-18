@@ -1,5 +1,8 @@
 package org.launchcode.models;
 
+import org.launchcode.models.data.MenuDao;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;

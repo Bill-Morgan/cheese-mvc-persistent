@@ -30,6 +30,10 @@ public class Menu {
         cheeses.add(item);
     }
 
+    public void removeItem(Integer cheeseId) {
+        cheeses.remove(cheeseId);
+    }
+
     public String getName() {
         return name;
     }
