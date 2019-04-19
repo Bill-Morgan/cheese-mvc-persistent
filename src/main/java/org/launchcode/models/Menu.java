@@ -30,8 +30,8 @@ public class Menu {
         cheeses.add(item);
     }
 
-    public void removeItem(Integer cheeseId) {
-        cheeses.remove(cheeseId);
+    public void removeItem(Cheese cheese) {
+        cheeses.remove(cheese);
     }
 
     public String getName() {

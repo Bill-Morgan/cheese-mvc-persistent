@@ -93,6 +93,10 @@ public class CheeseController {
     public String processRemoveCheeseForm(@RequestParam int[] cheeseIds) {
 
         for (Integer cheeseId : cheeseIds) {
+            for (Menu menu : cheeseDao.findOne(cheeseId).getMenus()) {
+                menu.removeItem(cheeseDao.findOne(cheeseId));
+                menuDao.save(menu);
+            }
             cheeseDao.delete(cheeseId);
         }
 
